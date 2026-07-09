@@ -1,0 +1,260 @@
+:root {
+    --color1: #f7f9fa;
+    --color2: #ffffff;
+    --color3: #3c3c3c;
+    --color4: #afafaf;
+    --color5: #0f9b6b;
+    --color6: #e8f7f1;
+    --color7: #e5e5e5;
+}
+
+.signUp-screen{
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--color1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.signUp-card{
+    width: 100%;
+    max-width: 440px;
+    background-color: var(--color2);
+    border: 1px solid var(--color7);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.signUp-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.signUp-logo{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.logo-badge{
+    display: flex;
+    height: 35px;
+    width: 35px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background-color: var(--color5);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.logo-text{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color3);
+}
+
+.signUp-title{
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color3);
+    margin: 0;
+}
+
+.signUp-subtitle{
+    font-size: 0.88rem;
+    color: var(--color4);
+    margin: 4px 0 0 0;
+    text-align: center;
+}
+
+.signUp-form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-label{
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color3);
+    margin: 0;
+    text-align: left;
+}
+
+.type-selector-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.type-btn{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid var(--color7);
+    background-color: var(--color2);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.type-btn:hover{
+    border-color: rgba(15, 155, 107, 0.4);
+}
+
+.type-btn.active{
+    border-color: var(--color5);
+    background-color: var(--color6);
+}
+
+.type-icon{
+    font-size: 1.25rem;
+    color: var(--color4);
+}
+
+.type-btn.active, .type-icon.active{
+    color: var(--color5);
+}
+
+.type-texts{
+    display: flex;
+    flex-direction: column;
+}
+
+.type-title{
+    font-weight: 600;
+    color: var(--color3);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.type-desc{
+    font-size: 0.75rem;
+    color: var(--color4);
+    margin: 4px 0 0 0;
+}
+
+.input-wrapper{
+    position: relative;
+    width: 100%;
+}
+
+.input-icon{
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color4);
+}
+
+.form-input{
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--color7);
+    background-color: var(--color1);
+    padding: 10px 12px 10px 40px;
+    font-size: 0.88rem;
+    color: var(--color3);
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.form-input::placeholder{
+    color: var(--color4);
+}
+
+.form-input:focus{
+    border-color: var(--color5);
+}
+
+.btn-submit{
+    width: 100%;
+    border-radius: 8px;
+    background-color: var(--color5);
+    color: white;
+    padding: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s;
+}
+
+.btn-submit:hover{
+    background-color: #0d8660;
+}
+
+.login-redirect-text{
+    margin: 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color4);
+}
+
+.btn-link{
+    background: none;
+    border: none;
+    color: var(--color5);
+    font-weight: 550;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-link:hover{
+    text-decoration: underline;
+}
+
+.success-conteiner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color6);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+}
+
+.success-icon{
+    font-size: 3rem;
+    color: var(--color5);
+    margin-bottom: 12px;
+}
+
+.success-title{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color3);
+    margin: 0;
+}
+
+.success-text{
+    font-size: 0.88rem;
+    color: var(--color4);
+    margin: 4px 0 0 0;
+}
+
+.success-role{
+    font-weight: 500;
+    color: var(--color5);
+}

@@ -1,0 +1,2 @@
+INSERT INTO conteudos (titulo, modulo, video_url) VALUES ('Módulo 1: Lógica de Programação', 'logica', 'https://youtube.com/...');
+INSERT INTO conteudos (titulo, modulo, video_url) VALUES ('Módulo 2: Introdução a Python', 'python', 'https://youtube.com/...');

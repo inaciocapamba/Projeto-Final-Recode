@@ -1,0 +1,106 @@
+:root {  
+    --color1: #f7f9fa; /* Fundo suave da página */
+    --color2: #ffffff;
+    --color3: #3c3c3c;
+    --color4: #afafaf;
+    --color5: #0f9b6b; /* Verde característico da DuoTec */
+    --color6: #e8f7f1;
+    --color7: #e5e5e5;
+}
+/*--------------------- Header ------------------------*/
+
+h1, h2{
+    line-height: 1.3em;
+}
+
+.firstPage-hearder{
+    display: flex;
+    min-height: 70px;
+    padding: 0 24px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.179);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+}
+
+.logo{
+    background-color: var(--color5);
+    padding: 6px;
+    border-radius: 35%;
+    color: white;
+    font-weight: bolder;
+    margin-right: 3px;
+}
+
+.logo-text{
+    font-weight: bold;
+    color: black;
+}
+
+.btn-principal:hover{
+    background-color: var(--color6);
+    color: black;
+}
+/*------------- Body ---------------*/
+
+body{
+    background-color: var(--color7);
+}
+
+.img-duo{
+    width: 350px;
+    height: 250px;
+    box-shadow: 10px 5px 5px var(--color7);
+}
+
+#sem-traumas{
+    color: var(--color5);
+}
+
+.btn-comecar{
+    background-color: var(--color5);
+    padding: 20px;
+    margin: 40px 0 10px;
+}
+
+.btn-comecar:hover{
+    background-color: #1ca47e;
+}
+
+.card-title{
+    margin-top: 40px;
+}
+
+.card{
+    background-color: white;
+    border: 2px solid var(--color2);
+    margin: 0 10px;
+    border-radius: 15px;
+    min-width: 250px;
+}
+
+.card:hover{
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.168);
+}
+
+.card-body{
+    padding: 10px;
+    margin: 60px;
+}
+
+.card-icon{
+    background-color: var(--color6);
+    width: 40px;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.text-lg{
+    color: black;
+}
+/*------------- Footer -------------*/
+footer{
+    background-color: var(--color2);
+    border-top: 1px solid rgba(99, 96, 96, 0.274);
+}
