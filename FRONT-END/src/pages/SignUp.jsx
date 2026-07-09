@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import "../styles/SignUp.css"
+import "../styles/SignUp.css";
 
 function InputField({id, label, type, icon, placeholder, value, onChange}){
     return(

@@ -11,14 +11,17 @@
 .admin-container{
     display: flex;
     min-height: 100vh;
+    width: 100vw;
     background-color: var(--color1);
     font-family: sans-serif;
+    box-sizing: border-box;
 }
 
 .admin-sidebar{
     display: flex;
     flex-direction: column;
     width: 250px;
+    min-width: 250px;
     background-color: var(--color2);
     border-right: 2px solid var(--color7);
 }
@@ -65,17 +68,19 @@
     text-align: left;
     cursor: pointer;
     color: var(--color3);
+    transition: all 0.2s;
 }
 
-.nav-link.active {
-    background-color: var(--color6);
-    color: var(--color5);
-    font-weight: 500;
+.nav-link:hover{
+    background-color: var(--color5);
+    color: var(--color2);
 }
 
 .admin-main{
+    flex: 1;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .admin-header{

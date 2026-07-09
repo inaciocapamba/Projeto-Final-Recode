@@ -1,5 +1,6 @@
 package com.example.duotec.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class Usuario {
     private int days = 0;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("usuario")
     private List<ProgressoUsuario> progressos;
 
     public Long getId() {

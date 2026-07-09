@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "primeicons/primeicons.css";
 import "../styles/AdminPage.css";
 
 function SideBar({ onNavigate }) {
@@ -10,10 +9,6 @@ function SideBar({ onNavigate }) {
                 <span className="logo-text">DuoTec</span>
             </div>
             <nav className="sidebar-nav">
-                <button className="nav-link active">
-                    <i className="pi pi-file-edit"></i>
-                    Cadastrar Questões
-                </button>
                 <button 
                     className="nav-link"
                     onClick={() => onNavigate('first')}
@@ -38,26 +33,37 @@ function MetricCard({ icon, label, value, iconColor }) {
     );
 }
 
-// Passamos 'listaConteudos' via props para o formulário usar no select
 function QuestionForm({ onQuestionCreated, listaConteudos }) {
-    const [selectedConteudoId, setSelectedConteudoId] = useState(""); // Guarda o ID do conteúdo selecionado
+    const [selectedConteudoId, setSelectedConteudoId] = useState("");
     const [statement, setStatement] = useState("");
     const [answer, setAnswer] = useState("");
+    const [wrongAnswers, setWrongAnswers] = useState("");
     const [saved, setSaved] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Monta o corpo vinculando dinamicamente ao ID do conteúdo selecionado no dropdown
+        if (!selectedConteudoId) {
+            alert("Por favor, selecione um módulo/conteúdo.");
+            return;
+        }
+
+        const arrayIncorretas = wrongAnswers.split(',').map(opt => opt.trim()).filter(Boolean);
+        if (arrayIncorretas.length !== 3) {
+            alert(`Por favor, insira exatamente 3 respostas incorretas separadas por vírgula.\nVocê digitou atualmente: ${arrayIncorretas.length}`);
+            return;
+        }
+
         const novaQuestao = {
             enunciado: statement,
             respostaCorreta: answer,
-            conteudo: {
-                id: parseInt(selectedConteudoId) // Vincula a questão ao ID real do banco
-            }
+            respostaIncorreta: wrongAnswers, 
+            conteudoId: parseInt(selectedConteudoId)
         };
 
         try {
+            setLoading(true);
             const response = await fetch("http://localhost:8080/api/questoes", {
                 method: "POST",
                 headers: {
@@ -71,6 +77,7 @@ function QuestionForm({ onQuestionCreated, listaConteudos }) {
                 setSelectedConteudoId("");
                 setStatement("");
                 setAnswer("");
+                setWrongAnswers("");
 
                 if (onQuestionCreated) onQuestionCreated();
 
@@ -81,15 +88,18 @@ function QuestionForm({ onQuestionCreated, listaConteudos }) {
         } catch (error) {
             console.error("Erro de conexão com o backend:", error);
             alert("Não foi possível conectar ao backend.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="form-card">
-            <h2 className="form-title">Novas Questões</h2>
+        <div className="admin-card">
+            <h2 className="form-title">Cadastrar Nova Questão</h2>
             <form className="admin-form" onSubmit={handleSubmit}>
+                
                 <div className="form-group">
-                    <label htmlFor="module">Módulo</label>
+                    <label htmlFor="module">Módulo/Conteúdo</label>
                     <select
                         id="module"
                         value={selectedConteudoId}
@@ -97,11 +107,10 @@ function QuestionForm({ onQuestionCreated, listaConteudos }) {
                         required
                         className="form-select"
                     >
-                        <option value="" disabled>Selecione o módulo</option>
-                        {/* Renderiza dinamicamente as opções vindas do banco de dados */}
+                        <option value="" disabled>-- Selecione um Conteúdo --</option>
                         {listaConteudos.map((c) => (
                             <option key={c.id} value={c.id}>
-                                {c.titulo} ({c.modulo.toUpperCase()})
+                                {c.modulo.toUpperCase()} - {c.titulo}
                             </option>
                         ))}
                     </select>
@@ -113,9 +122,10 @@ function QuestionForm({ onQuestionCreated, listaConteudos }) {
                         id="statement"
                         value={statement}
                         onChange={(e) => setStatement(e.target.value)}
-                        placeholder="Digite o enunciado completo da questão..."
+                        placeholder="Ex: Digite aqui o enunciado da questão..."
                         required
                         className="form-textarea"
+                        rows="4"
                     />
                 </div>
 
@@ -126,24 +136,43 @@ function QuestionForm({ onQuestionCreated, listaConteudos }) {
                         type="text"
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
-                        placeholder="Ex: print(), 'Python', verdadeiro"
+                        placeholder="Ex: 4"
                         required
                         className="form-input"
                     />
                 </div>
 
-                <div className="form-action">
-                    <button type="submit" className="btn-submit">
+                <div className="form-group">
+                    <label htmlFor="wrongAnswers">Respostas Incorretas (Insira exatamente 3 separadas por vírgula)</label>
+                    <input 
+                        id="wrongAnswers"
+                        type="text"
+                        value={wrongAnswers}
+                        onChange={(e) => setWrongAnswers(e.target.value)}
+                        placeholder="Ex: 3, 5, 2"
+                        required
+                        className="form-input"
+                    />
+                </div>
+
+                <div className="form-action" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                    <button type="submit" className="btn-submit" disabled={loading || saved}>
                         {saved ? (
-                            <div>
-                                <i className="pi pi-check-circle" style={{ marginRight: "8px" }}></i>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <i className="pi pi-check-circle" style={{ marginRight: "8px", fontSize: "1.1rem" }}></i>
                                 Questão salva
                             </div>
+                        ) : loading ? (
+                            "Cadastrando..."
                         ) : (
                             "Salvar Questão"
                         )}
                     </button>
-                    {saved && <p className="success-msg">Questão cadastrada com sucesso!</p>}
+                    {saved && (
+                        <p className="success-msg" style={{ color: "var(--color5)", fontSize: "0.9rem", margin: "5px 0 0 0", fontWeight: "600", textAlign: "center" }}>
+                            Questão cadastrada com sucesso!
+                        </p>
+                    )}
                 </div>
             </form>
         </div>

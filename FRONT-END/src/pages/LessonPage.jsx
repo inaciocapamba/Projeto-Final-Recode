@@ -224,11 +224,16 @@ function LessonPage({ onNavigate }) {
 
   const salvarOfensivaNoBanco = async () => {
     try {
-      await fetch(`http://localhost:8080/api/usuarios/${usuarioId}/atualizar-ofensiva?quantidade=1`, {
+      const usuarioId = localStorage.getItem("usuario_id") || "1";
+      const response = await fetch(`http://localhost:8080/api/usuarios/${usuarioId}/atualizar-ofensiva?quantidade=1`, {
         method: "PATCH"
       });
+
+      if (!response.ok) {
+        console.error("Erro ao atualizar ofensiva no servidor.");
+      }
     } catch (error) {
-      console.error("Erro ao salvar ganho de ofensiva no banco:", error);
+      console.error("Erro na requisição de atualizar ofensiva:", error);
     }
   };
 
@@ -246,16 +251,21 @@ function LessonPage({ onNavigate }) {
 
   const salvarProgressoNoBanco = async () => {
     try {
-      await fetch("http://localhost:8080/api/progresso/concluir", {
+      const usuarioId = localStorage.getItem("usuario_id") || "1";
+      const response = await fetch("http://localhost:8080/api/progresso/concluir", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          usuario: { id: parseInt(usuarioId) },
-          conteudo: { id: parseInt(conteudoId) }
+          usuarioId: parseInt(usuarioId),
+          conteudoId: parseInt(conteudoId)
         })
       });
-    } catch (e) {
-      console.error("Erro ao registrar conclusão do conteúdo:", e);
+      
+      if (!response.ok) {
+        console.error("Erro ao salvar progresso no servidor.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição de salvar progresso:", error);
     }
   };
 

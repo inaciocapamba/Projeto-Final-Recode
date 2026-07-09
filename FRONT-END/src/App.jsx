@@ -5,6 +5,7 @@ import LessonPage from './pages/LessonPage';
 import AdminPage from './pages/AdminPage';
 import SignUp from './pages/SignUp';
 import ProfilePage from './pages/ProfilePage';
+import 'primeicons/primeicons.css';
 
 function App() {
   const [page, setPage] = useState('first');

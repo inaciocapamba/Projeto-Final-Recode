@@ -1,5 +1,6 @@
 package com.example.duotec.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public class Conteudo {
     private String modulo;
     private String videoUrl;
 
-    @OneToMany(mappedBy = "conteudo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "conteudo")
+    @JsonIgnore
     private List<ProgressoUsuario> progresso;
 
     public Long getId() {
