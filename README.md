@@ -100,4 +100,152 @@ INSERT INTO questoes (enunciado, resposta_correta, resposta_incorreta, conteudo_
 ('Qual operador em Python é usado para verificar se dois valores são iguais?', '==', '!=, ===, equal', 1),
 ('Qual comando é utilizado para exibir uma mensagem na tela em Python?', 'print()', 'printf(), console.log(), println()', 1),
 ('Como se declara uma variável do tipo string (texto) corretamente em Python?', 'nome = "DuoTec"', 'let, const, var', 1);
+```
+
+# DuoTec API - Documentação do Back-end
+
+Esta é a API REST do projeto DuoTec, desenvolvida em **Java Spring Boot**, utilizando **MySQL** para persistência de dados e criptografia de segurança **BCrypt**.
+
+---
+
+## Tecnologias Utilizadas
+* **Java 17+**
+* **Spring Boot 3**
+* **Spring Data JPA**
+* **jBCrypt** (Segurança e hashing de senhas)
+* **MySQL / H2 Database**
+
+---
+
+## Lista de Endpoints da API
+
+### 1. Gerenciamento de Usuários e Autenticação (`/api/usuarios`)
+
+* **POST `/api/usuarios/cadastro`**
+  * **Descrição:** Realiza o registro de um novo usuário na plataforma. Aplica criptografia via BCrypt na senha informada.
+  * **Regra de Negócio:** Retorna erro `400 Bad Request` se o e-mail já estiver cadastrado.
+  * **Resposta de Sucesso (201 Created):** Retorna o objeto do usuário salvo.
+
+* **POST `/api/usuarios/login`**
+  * **Descrição:** Autentica um usuário na plataforma comparando o hash da senha enviada.
+  * **Resposta de Sucesso (200 OK):** Retorna os dados cadastrais do usuário autenticado.
+  * **Resposta de Erro (411 Unauthorized):** `"Email ou senha incorreto."`
+
+* **GET `/api/usuarios`**
+  * **Descrição:** Retorna a lista completa de usuários cadastrados no banco.
+  * **Resposta (200 OK):** Array de objetos contendo `id`, `name`, `email`, `accountType`, `lives` e `days`.
+
+* **PUT `/api/usuarios/{usuarioId}`**
+  * **Descrição:** Atualiza o perfil (nome, e-mail e opcionalmente a senha) do usuário.
+  * **Regra de Negócio:** Impede a operação se o novo e-mail já pertencer a outra conta existente no sistema.
+
+* **PATCH `/api/usuarios/{usuarioId}/decrementar-vida`**
+  * **Descrição:** Deduz 1 unidade do contador de vidas (`lives`) do usuário ao errar um desafio.
+  * **Regra de Negócio:** Se o usuário já possuir 0 vidas, retorna erro impossibilitando o decremento.
+
+* **PATCH `/api/usuarios/{usuarioId}/atualizar-ofensiva`**
+  * **Descrição:** Incrementa o contador de dias de ofensiva (`days`) do usuário utilizando um parâmetro de consulta (`?quantidade=X`).
+
+---
+
+### 2. Conteúdos e Módulos (`/api/conteudos`)
+
+* **GET `/api/conteudos`**
+  * **Descrição:** Lista de forma sequencial todos os módulos e trilhas cadastrados.
+
+* **POST `/api/conteudos`**
+  * **Descrição:** Permite à administração a criação e persistência de novos módulos de estudo.
+
+---
+
+### 3. Banco de Questões (`/api/questoes`)
+
+* **GET `/api/questoes/conteudo/{conteudoId}`**
+  * **Descrição:** Retorna a coleção completa de desafios e testes vinculados de forma estrita a um módulo ou conteúdo específico.
+
+* **GET `/api/questoes/conteudo`**
+  * **Descrição:** Retorna todas as questões registradas globalmente no ecossistema.
+
+* **POST `/api/questoes`**
+  * **Descrição:** Permite a inserção manual de novos quizzes (enunciado, resposta correta e incorreta) associados a uma chave estrangeira.
+
+---
+
+### 4. Controle de Progresso (`/api/progresso`)
+
+* **GET `/api/progresso/usuario/{usuarioId}`**
+  * **Descrição:** Lista as lições completas e o andamento acadêmico atual mapeado para um aluno específico.
+
+* **POST `/api/progresso/concluir`**
+  * **Descrição:** Altera a flag de status de uma lição (`concluido = true`) e grava a data exata do servidor via `LocalDateTime.now()`.
+
+---
+
+## Como Rodar o Ambiente Localmente
+
+1. Certifique-se de que a porta `8080` esteja livre na máquina local.
+2. Certifique-se de configurar as variáveis de conexão com o banco de dados no arquivo `src/main/resources/application.properties`.
+3. Na pasta raiz do back-end, execute o Maven wrapper para baixar as dependências e iniciar o ciclo de vida do Spring Boot:
+   ```bash
+   ./mvnw spring-boot:run
+
+# DuoTec Web - Documentação do Front-end
+
+A interface do utilizador do DuoTec é uma **SPA (Single Page Application)** responsiva e dinâmica desenvolvida em **React** com o ecossistema de build **Vite** e estilização baseada em **PrimeIcons** para os indicadores visuais.
+
+---
+
+## Tecnologias Utilizadas
+* **React** (v18+)
+* **Vite** (Ambiente de build rápido)
+* **PrimeIcons** (Biblioteca de ícones nativos)
+* **CSS3** (Estilização modular e estruturada por componentes)
+
+---
+
+## Estrutura de Páginas e Consumo de Endpoints
+
+O ecossistema do front-end é gerenciado por uma navegação de estados baseada na função `onNavigate`, alternando dinamicamente as seguintes telas principais:
+
+### 1. Portal de Entrada & Boas-Vindas (`FirstPage.jsx`)
+* **Descrição:** Apresenta a proposta de valor do DuoTec (lições curtas de 10 minutos, projetos práticos e comunidade). Inclui um modal de Login flutuante (`Dialog` da biblioteca local) para autenticação.
+* **Endpoints Consumidos:**
+  * `POST /api/usuarios/login` - Envia o objeto `LoginRequest` (`email` e `password`) para autenticação e armazena o `usuario_id` e `accountType` no `localStorage`.
+
+### 2. Cadastro de Novas Contas (`SignUp.jsx`)
+* **Descrição:** Formulário de registo dividido entre os perfis **Estudante (`student`)** e **Administrador (`admin`)**. 
+* **Regra de Negócio Visual:** Caso o tipo selecionado seja `admin`, um campo extra oculto para inserção da *Chave de Acesso Admin* (`adminKey`) é renderizado no ecrã.
+* **Endpoints Consumidos:**
+  * `POST /api/usuarios/cadastro` - Submete os dados estruturados (`name`, `email`, `password`, `accountType`, `adminKey`) para criação segura da conta.
+
+### 3. Painel do Aluno / Mapa da Trilha (`StudentPage.jsx`)
+* **Descrição:** O coração da experiência do aluno. Renderiza um cabeçalho fixo com o painel de status em tempo real do utilizador, exibindo o contador de Vidas Restantes (`lives`) e Dias de Ofensiva (`days`). Abaixo, desenha a trilha vertical de módulos de aprendizagem sequenciais interconectados.
+* **Endpoints Consumidos:**
+  * `GET /api/usuarios` - Utilizado para localizar a lista de utilizadores e filtrar os dados específicos da sessão ativa do aluno.
+  * `GET /api/conteudos` - Puxa a lista completa de módulos registados para renderizar dinamicamente cada círculo de conteúdo (`ModuleCircle`) e as linhas de ligação do mapa.
+
+### 4. Interface da Lição & Gameplay (`LessonPage.jsx`)
+* **Descrição:** Divide o ecrã em duas secções fundamentais para a gamificação:
+  1. **Painel Teórico:** Player com vídeo incorporado do YouTube (via Iframe).
+  2. **Painel Prático (Quiz):** Renderiza o passo a passo de questões. Contém o algoritmo que quebra as respostas incorretas por vírgula (`.split(',')`), junta com a correta e embaralha a ordenação no grid visual usando o Hook `useEffect`.
+* **Endpoints Consumidos:**
+  * `GET /api/questoes/conteudo/{conteudoId}` - Carrega todas as perguntas associadas ao módulo iniciado.
+  * `PATCH /api/usuarios/{usuarioId}/decrementar-vida` - Disparado automaticamente ao submeter uma resposta incorreta.
+  * `POST /api/progresso/concluir` - Grava o status de conclusão da lição ao atingir o último step.
+  * `PATCH /api/usuarios/{usuarioId}/atualizar-ofensiva?quantidade=1` - Incrementa os dias de ofensiva acumulados do utilizador ao fechar o ecrã de sucesso.
+
+### 5. Edição do Perfil do Utilizador (`ProfilePage.jsx`)
+* **Descrição:** Área segura que exibe o resumo da conta e disponibiliza um modo de edição para alteração do Nome, E-mail e redefinição opcional de Senha. Também centraliza a ação de encerrar a sessão limpando os dados armazenados.
+* **Endpoints Consumidos:**
+  * `GET /api/usuarios` - Sincroniza e preenche o formulário com as strings vigentes no banco de dados.
+  * `PUT /api/usuarios/{usuarioId}` - Envia as alterações validadas do formulário para atualização no servidor.
+
+### 6. Painel de Controle do Administrador (`AdminPage.jsx`)
+* **Descrição:** Ecrã restrito que apresenta métricas consolidadas em cartões dinâmicos (Total de Usuários e Total de Questões) e integra um formulário avançado de cadastro para novas perguntas vinculadas aos módulos existentes.
+* **Endpoints Consumidos:**
+  * `GET /api/usuarios` - Conta a volumetria total de perfis criados no sistema.
+  * `GET /api/questoes/conteudo` - Obtém todas as perguntas globais para exibição na métrica.
+  * `GET /api/conteudos` - Preenche o menu de seleção (`<select>`) para associar a nova questão ao seu respectivo ID de conteúdo.
+  * `POST /api/questoes` - Envia o formulário de cadastro de nova questão para persistência definitiva no banco de dados.
+
 
