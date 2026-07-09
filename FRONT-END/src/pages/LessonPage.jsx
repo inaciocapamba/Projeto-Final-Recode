@@ -27,10 +27,8 @@ function Main({ currentStep, totalQuestions, selected, setSelected, state, video
       const incorretas = questaoAtual.respostaIncorreta ? questaoAtual.respostaIncorreta.split(',') : [];
       const todasOpcoes = [...incorretas, questaoAtual.respostaCorreta].map(opt => opt.trim());
 
-      // 2. Embaralha de maneira simples usando ordenação aleatória (.sort)
       const misturadas = todasOpcoes.sort(() => Math.random() - 0.5);
 
-      // 3. Vincula as letras fixas (a, b, c, d) para o mapeamento visual no grid
       const letras = ['a', 'b', 'c', 'd'];
       const opcoesFinais = misturadas.slice(0, 4).map((texto, index) => ({
         id: letras[index],

@@ -1,24 +1,23 @@
 import React, {useState} from "react";
+import "primeicons/primeicons.css";
 import "../styles/SignUp.css";
 
 function InputField({id, label, type, icon, placeholder, value, onChange}){
     return(
         <div className="form-group">
             <label htmlFor={id} className="field-label">
+                <span className={`pi ${icon} label-icon`}/>
                 {label}
             </label>
-            <div className="input-wrapper">
-                <span className={`pi ${icon} input-icon`}/>
-                <input 
-                id={id}
-                type={type}
-                placeholder={placeholder} 
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                required
-                className="form-input"
-                />
-            </div>
+            <input 
+            id={id}
+            type={type}
+            placeholder={placeholder} 
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            required
+            className="form-input"
+            />
         </div>
     )
 }

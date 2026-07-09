@@ -4,10 +4,9 @@ import '../styles/ProfilePage.css';
 
 function ProfilePage({ onNavegate }) {
     const [usuario, setUsuario] = useState(null);
-    const [loading, setLoading] = useState(true); // Alterado para true para iniciar carregando
+    const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
-    // Ajustado para coincidir com os campos do seu modelo Java (nome/email)
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -22,14 +21,12 @@ function ProfilePage({ onNavegate }) {
             const response = await fetch("http://localhost:8080/api/usuarios");
 
             if (response.ok) {
-                // CORREÇÃO 1: Adicionado o await necessário aqui
                 const usuarios = await response.json(); 
                 
                 const usuarioLogado = usuarios.find((u) => u.id.toString() === usuarioId.toString());
 
                 if (usuarioLogado) {
                     setUsuario(usuarioLogado);
-                    // CORREÇÃO 3: Inicializa usando o objeto da requisição (usuarioLogado)
                     setName(usuarioLogado.nome || usuarioLogado.name || '');
                     setEmail(usuarioLogado.email || '');
                 }
@@ -52,10 +49,9 @@ function ProfilePage({ onNavegate }) {
         try {
             const usuarioId = localStorage.getItem("usuario_id") || "1";
 
-            // CORREÇÃO 2: Nome da constante unificado
             const updatedDatas = {
                 ...usuario,
-                nome: name, // Mapeado para 'nome' igual espera o seu DTO/Model do Java
+                nome: name,
                 name: name,
                 email: email
             };
@@ -69,15 +65,14 @@ function ProfilePage({ onNavegate }) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(updatedDatas) // CORREÇÃO 2: Passando a variável correta
+                body: JSON.stringify(updatedDatas)
             });
 
             if (response.ok) {
-                // CORREÇÃO 1: Adicionado await aqui também
                 const usuarioSalvo = await response.json(); 
                 setUsuario(usuarioSalvo);
                 setNewPassword('');
-                setIsEditing(false); // Fecha o formulário ao salvar com sucesso
+                setIsEditing(false);
                 setMessage({ text: 'Perfil atualizado com sucesso!', type: 'success' });
             } else {
                 const erroTexto = await response.text();
@@ -146,7 +141,7 @@ function ProfilePage({ onNavegate }) {
                             type="text" 
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            disabled={!isEditing} // CORREÇÃO 4: Usando a variável booleana correta
+                            disabled={!isEditing} 
                             className={!isEditing ? "input-disabled" : "input-enabled"}
                             required
                         />
@@ -158,7 +153,7 @@ function ProfilePage({ onNavegate }) {
                             type="email" 
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            disabled={!isEditing} // CORREÇÃO 4
+                            disabled={!isEditing}
                             className={!isEditing ? "input-disabled" : "input-enabled"}
                             required
                         />
@@ -171,7 +166,7 @@ function ProfilePage({ onNavegate }) {
                             placeholder={isEditing ? "Digite uma nova senha se quiser alterar" : "••••••••••••"}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            disabled={!isEditing} // CORREÇÃO 4
+                            disabled={!isEditing}
                             className={!isEditing ? "input-disabled" : "input-enabled"}
                         />
                     </div>
