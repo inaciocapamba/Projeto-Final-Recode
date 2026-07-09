@@ -93,13 +93,41 @@ CREATE TABLE IF NOT EXISTS progresso_usuario (
 );
 
 INSERT INTO conteudos (id, titulo, modulo, video_url) VALUES 
-(1, 'Módulo 2: Introdução a Python', 'python', '[https://www.youtube.com/watch?v=rfscVS0vtbw](https://www.youtube.com/watch?v=rfscVS0vtbw)'),
-(2, 'Módulo 3: Estrutura de Dados', 'Dados', '[https://youtube.com/](https://youtube.com/)...');
+(1, 'Módulo 1: Variáveis e Operadores', 'logica', 'https://www.youtube.com/watch?v=gMxQ8vxH9Vk'),
+(2, 'Módulo 2: Estruturas Condicionais e Repetição', 'logica', 'https://www.youtube.com/watch?v=rfscVS0vtbw'),
+(3, 'Módulo 3: Introdução a Funções', 'logica', 'https://www.youtube.com/watch?v=rfscVS0vtbw'),
+(4, 'Módulo 4: Introdução a Python', 'python', 'https://www.youtube.com/watch?v=rfscVS0vtbw'),
+(5, 'Módulo 5: Estrutura de Dados', 'Dados', 'https://www.youtube.com/watch?v=rfscVS0vtbw');
 
 INSERT INTO questoes (enunciado, resposta_correta, resposta_incorreta, conteudo_id) VALUES 
-('Qual operador em Python é usado para verificar se dois valores são iguais?', '==', '!=, ===, equal', 1),
-('Qual comando é utilizado para exibir uma mensagem na tela em Python?', 'print()', 'printf(), console.log(), println()', 1),
-('Como se declara uma variável do tipo string (texto) corretamente em Python?', 'nome = "DuoTec"', 'let, const, var', 1);
+('Se uma variável x recebe o valor 5 e uma variável y recebe o valor 10, qual será o resultado lógico da expressão x > y?', 'Falso', 'Verdadeiro, Nulo, Erro de compilação', 1),
+('Qual das seguintes alternativas descreve melhor a função de uma variável em lógica de programação?', 'Um espaço na memória do computador reservado para armazenar dados temporariamente.', 'Um comando usado apenas para exibir mensagens na tela., Um tipo de operador matemático usado para somar valores., Um arquivo de texto salvo no disco rígido.', 1),
+('Qual tipo de dado é mais adequado para armazenar se um usuário está ativo ou inativo no sistema?', 'Booleano (Boolean)', 'Inteiro (Integer), Texto (String), Real (Float)', 1),
+('Se o resto de uma divisão inteira (operador MOD ou %) de um número por 2 resulta em 0, o que podemos afirmar sobre esse número?', 'Ele é um número par.', 'Ele é um número ímpar., Ele é um número primo., Ele é um número negativo.', 1);
+
+INSERT INTO questoes (enunciado, resposta_correta, resposta_incorreta, conteudo_id) VALUES 
+('Qual estrutura de controle de fluxo é ideal quando precisamos executar um bloco de código repetidamente enquanto uma condição for verdadeira?', 'Enquanto (While)', 'Se (If), Escolha (Switch), Retorne (Return)', 2),
+('Considere a estrutura condicional: Se (idade >= 18) então Exiba "Maior de idade". O que acontece se o valor da variável idade for igual a 17?', 'O bloco condicional é pulado e nada é exibido.', 'A mensagem "Maior de idade" é exibida mesmo assim., O programa trava com um erro de lógica., O sistema assume o valor 18 automaticamente.', 2),
+('Qual estrutura de repetição é mais recomendada quando já sabemos previamente o número exato de vezes que o bloco deve ser executado?', 'Para (For)', 'Enquanto (While), Faça Enquanto (Do While), Se (If)', 2),
+('O que caracteriza um loop infinito em lógica de programação?', 'Uma estrutura de repetição cuja condição de parada nunca se torna falsa.', 'Uma estrutura condicional que executa duas instruções ao mesmo tempo., Uma função que chama a si mesma uma única vez., Um erro de sintaxe que impede o programa de ser compilado.', 2);
+
+INSERT INTO questoes (enunciado, resposta_correta, resposta_incorreta, conteudo_id) VALUES 
+('Em lógica de programação, qual é o principal objetivo de se criar uma Função?', 'Modularizar o código permitindo reaproveitar um bloco de instruções várias vezes.', 'Armazenar valores numéricos complexos na memória., Limpar a tela do console do usuário., Interromper a execução de um loop infinito.', 3),
+('Como chamamos os valores que passamos para dentro de uma função no momento em que ela é invocada para que ela possa processá-los?', 'Parâmetros / Argumentos', 'Variáveis globais, Estruturas condicionais, Retornos lógicos', 3),
+('Qual comando é utilizado dentro de uma função para enviar um valor resultante de seu processamento de volta para quem a chamou?', 'Retorne (Return)', 'Exiba (Print), Pare (Break), Continue', 3),
+('Se uma variável for criada e declarada exclusivamente dentro do corpo de uma função, qual é o seu escopo?', 'Escopo Local', 'Escopo Global, Escopo Público, Escopo Estático', 3);
+
+INSERT INTO questoes (enunciado, resposta_correta, resposta_incorreta, conteudo_id) VALUES 
+('Qual comando é utilizado para exibir uma mensagem na tela em Python?', 'print()', 'echo, system.out.print, console.log', 4),
+('Qual operador em Python é usado para verificar se dois valores são iguais?', '==', '=, !=, ===', 4),
+('Como o interpretador do Python identifica o início e o fim de um bloco de código, como o corpo de um "if" ou "for"?', 'Pela indentação (espaçamento no início da linha)', 'Por chaves {}, Por palavras-chave como end ou nex, Por ponto e vírgula ; no final', 4),
+('Qual das seguintes alternativas cria um comentário de uma única linha em Python?', '# Este é um comentário', '// Este é um comentário, /* Este é um comentário */, ', 4);
+
+INSERT INTO questoes (enunciado, resposta_correta, resposta_incorreta, conteudo_id) VALUES 
+('Qual estrutura de dados nativa do Python armazena elementos de forma ordenada e permite duplicatas, sendo delimitada por colchetes []?', 'Lista (List)', 'Dicionário (Dict), Conjunto (Set), Tupla (Tuple)', 5),
+('Para mapear uma estrutura de dados com pares de chave-valor em Python, qual tipo de dado devemos utilizar?', 'Dicionário (Dict)', 'Matriz, Vetor, Tupla (Tuple)', 5),
+('Qual a principal característica que diferencia uma Tupla (Tuple) de uma Lista (List) em Python?', 'A tupla é imutável, ou seja, seus valores não podem ser alterados após a criação.', 'A tupla armazena apenas textos enquanto a lista armazena números., A tupla não permite elementos duplicados., A tupla consome muito mais memória do que uma lista.', 5),
+('Qual método é utilizado para adicionar um novo elemento ao final de uma lista em Python?', 'append()', 'add(), push(), insert_last()', 5);
 ```
 
 # DuoTec API - Documentação do Back-end
