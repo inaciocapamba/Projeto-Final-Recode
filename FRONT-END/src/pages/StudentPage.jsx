@@ -153,40 +153,69 @@ function StudentPage({ onNavigate }) {
 
     const buscarDadosDaTrilha = async () => {
 
-  try {
-    setLoading(true);
-    const usuarioId = localStorage.getItem("usuario_id") || "1";
     try {
-      const resUsuario = await fetch(`http://localhost:8080/api/usuarios`);
-      if (resUsuario.ok) {
-        const usuarios = await resUsuario.json();
-        const usuarioLogado = usuarios.find(u => u.id.toString() === usuarioId.toString());
+      setLoading(true);
+      const usuarioId = localStorage.getItem("usuario_id") || "1";
+      try {
+        const resUsuario = await fetch(`http://localhost:8080/api/usuarios`);
+        if (resUsuario.ok) {
+          const usuarios = await resUsuario.json();
+          const usuarioLogado = usuarios.find(u => u.id.toString() === usuarioId.toString());
 
-        if (usuarioLogado) {
-          setUsuario(usuarioLogado);
-        } else if (usuarios.length > 0) {
-          setUsuario(usuarios[0]);
+          if (usuarioLogado) {
+            setUsuario(usuarioLogado);
+          } else if (usuarios.length > 0) {
+            setUsuario(usuarios[0]);
+          }
         }
+      } catch (errUser) {
+        console.error("Erro ao buscar dados do usuário:", errUser);
       }
-    } catch (errUser) {
-      console.error("Erro ao buscar dados do usuário:", errUser);
-    }
 
-    const response = await fetch("http://localhost:8080/api/conteudos");
-    if (response.ok) {
-      const dados = await response.json();
-      const conteudosFormatados = dados.map((conteudo, index) => ({
-        ...conteudo, status: index === 0 ? 'active' : 'locked'
-      }));
-      setListaConteudos(conteudosFormatados);
-    } else {
-      console.error("Servidor retornou erro ao buscar conteúdos:", response.status);
+      const response = await fetch("http://localhost:8080/api/conteudos");
+      if (response.ok) {
+        const dados = await response.json();
+        const conteudosOrdenados = [...dados].sort((a, b) => a.id - b.id);
+
+        let progressos = [];
+        try {
+          const resProgresso = await fetch(`http://localhost:8080/api/progresso/usuario/${usuarioId}`);
+          if (resProgresso.ok) {
+            progressos = await resProgresso.json();
+          }
+        } catch (errProgresso) {
+          console.error("Erro ao buscar progresso do usuário:", errProgresso);
+        }
+
+        const idsConcluidos = new Set(
+          progressos
+            .filter((p) => p.concluido && p.conteudo)
+            .map((p) => p.conteudo.id)
+        );
+
+        let jaDefiniuAtivo = false;
+        const conteudosFormatados = conteudosOrdenados.map((conteudo) => {
+          let status;
+          if (idsConcluidos.has(conteudo.id)) {
+            status = 'completed';
+          } else if (!jaDefiniuAtivo) {
+            status = 'active';
+            jaDefiniuAtivo = true;
+          } else {
+            status = 'locked';
+          }
+          return { ...conteudo, status };
+        });
+
+        setListaConteudos(conteudosFormatados);
+      } else {
+        console.error("Servidor retornou erro ao buscar conteúdos:", response.status);
+      }
+    } catch (error) {
+      console.error("Erro geral ao conectar ao banco de dados:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Erro geral ao conectar ao banco de dados:", error);
-  } finally {
-    setLoading(false);
-  }
 
 };
 

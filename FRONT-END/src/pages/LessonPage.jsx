@@ -190,7 +190,7 @@ function LessonPage({ onNavigate }) {
         if (resUser.ok) {
           const users = await resUser.json();
           const logado = users.find(u => u.id.toString() === usuarioId.toString());
-          if (logado) setLives(logado.lives ?? logado.vidas ?? 5);
+          if (logado) setLives(logado.lives ?? 5);
         }
       } catch (error) {
         console.error("Erro ao carregar dados da lição:", error);
@@ -249,17 +249,28 @@ function LessonPage({ onNavigate }) {
 
   const salvarProgressoNoBanco = async () => {
     try {
-      const usuarioId = localStorage.getItem("usuario_id") || "1";
+      const requestBody = {
+        usuario: {
+          id: parseInt(usuarioId)
+        },
+        conteudo: {
+          id: parseInt(conteudoId)
+        }
+      }
+
       const response = await fetch("http://localhost:8080/api/progresso/concluir", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usuarioId: parseInt(usuarioId),
-          conteudoId: parseInt(conteudoId)
-        })
+        body: JSON.stringify(requestBody)
       });
       
-      if (!response.ok) {
+      if (response.ok) {
+        const progressoSalvo = await response.json();
+        if(progressoSalvo && progressoSalvo.conteudo && progressoSalvo.conteudo.id){
+          const proximoId = progressoSalvo.conteudo.id + 1;
+          localStorage.setItem("conteudo_id_atual", proximoId.toString());
+        }
+      }else{
         console.error("Erro ao salvar progresso no servidor.");
       }
     } catch (error) {

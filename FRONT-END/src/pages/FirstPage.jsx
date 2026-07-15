@@ -102,7 +102,6 @@ function LoginModal({ visible, onHide, onNavigate }) {
     setLoading(true);
 
     try {
-      // 🚀 Agora batemos diretamente no endpoint de LOGIN enviando o e-mail e a senha digitada
       const response = await fetch("http://localhost:8080/api/usuarios/login", {
         method: "POST",
         headers: {
@@ -110,30 +109,24 @@ function LoginModal({ visible, onHide, onNavigate }) {
         },
         body: JSON.stringify({ 
           email: email, 
-          password: password // Envia com a chave idêntica ao 'LoginRequest' do Java (senha)
+          password: password
         })
       });
       
       if (response.ok) {
-        // Se as credenciais estiverem corretas, o Java devolve o objeto do usuário completo
         const usuarioLogado = await response.json();
-
-        // Salva as credenciais básicas no localStorage com base no retorno real do banco
         localStorage.setItem("usuario_id", usuarioLogado.id.toString());
         
         const tipoConta = usuarioLogado.accountType || "Student";
         localStorage.setItem("user_role", tipoConta);
-        
-        onHide(); // Fecha o modal de login
+        onHide();
 
-        // Redireciona de acordo com o cargo retornado
         if (tipoConta.toLowerCase() === "admin") {
           onNavigate('admin');
         } else {
           onNavigate('student');
         }
       } else if (response.status === 401) {
-        // Se o Java responder 401 (Unauthorized), significa e-mail ou senha errados
         setErro("Email ou senha incorretos.");
       } else {
         setErro("Erro interno no servidor do sistema.");
